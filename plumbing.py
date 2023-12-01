@@ -26,8 +26,8 @@ def CreateExcel():
             "1.Convert to PNG ONLY",
             "2.Background Removal (WIP)",
             "3.Crop to Content (WIP)",
-            "4.Resize",
-            "5.Rename",
+            "4.Resize (Must do all images)",
+            "5.Rename (Must do all images)",
         ],
         columns=["Check"],
     )
