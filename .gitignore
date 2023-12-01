@@ -1,5 +1,5 @@
 .vscode
 input
 output
-Input_setting.xlsx
+*.xlsx
 mainScript.py

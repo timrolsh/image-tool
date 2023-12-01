@@ -52,25 +52,11 @@ def CreateExcel():
 
     worksheet.data_validation("B3", {"validate": "list", "source": ["Y", " "]})
     worksheet.write("B3", "", cell_format)
-    worksheet.write("C3", "2.1. Sensitivity(bg_threshold)", cell_format3)
-    worksheet.data_validation(
-        "D3",
-        {
-            "validate": "integer",
-            "criteria": "between",
-            "minimum": "1",
-            "maximum": "255",
-        },
-    )
-    worksheet.write("D3", 250, cell_format)
+    
 
     worksheet.data_validation("B4", {"validate": "list", "source": ["Y", " "]})
     worksheet.write("B4", "", cell_format)
-    worksheet.write("C4", "3.1. Sensitivity(k_size)", cell_format3)
-    worksheet.data_validation(
-        "D4",
-        {"validate": "integer", "criteria": "between", "minimum": "1", "maximum": "20"},
-    )
+    
     worksheet.write("D4", 5, cell_format)
 
     worksheet.data_validation("B5", {"validate": "list", "source": ["Y", " "]})
