@@ -17,6 +17,7 @@ with left_column:
     st.write('Step 5: Click the Run button under Setting and images will be in the output folder!')
 
 
-
-right_column.button("Setting", "setting", on_click= ms.Setting())
-right_column.button("Run","run", on_click= ms.Run())
+if right_column.button('Setting'):
+    ms.Setting()
+if right_column.button('Run'):
+    ms.Run()
