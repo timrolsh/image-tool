@@ -20,7 +20,7 @@ def CreateExcel():
     writer = pd.ExcelWriter("Input_setting.xlsx", engine="xlsxwriter")
 
     # 1. Setting Sheet
-    input_setting = pd.DataFrame(index=["1.Convert to PNG ONLY", "2.Background Removal", "3.Crop to Content", "4.Resize", "5.Rename"],
+    input_setting = pd.DataFrame(index=["1.Convert to PNG ONLY", "2.Background Removal (WIP)", "3.Crop to Content (WIP)", "4.Resize (Works)", "5.Rename (Works)"],
                                  columns=["Check"])
     input_setting.to_excel(writer, sheet_name="setting")
 
@@ -106,7 +106,7 @@ def CreateExcel():
     writer.close()
     workbook.close()
 
-    print('Complete!')
+    return 'Complete!'
 
 
 def Setting():
@@ -239,7 +239,7 @@ def Run():
         else:
             img.save("output/"+name_before+".png", format="png")
 
-    print("Complete!")
+    return "Complete!"
 
 
 # run = input()
