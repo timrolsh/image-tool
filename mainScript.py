@@ -106,7 +106,7 @@ def CreateExcel():
     writer.close()
     workbook.close()
 
-    print('Complete!')
+    return 'Complete!'
 
 
 def Setting():
@@ -239,7 +239,7 @@ def Run():
         else:
             img.save("output/"+name_before+".png", format="png")
 
-    print("Complete!")
+    return "Complete!"
 
 
 # run = input()
