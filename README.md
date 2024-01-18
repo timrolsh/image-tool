@@ -32,3 +32,11 @@ pip install -r requirements.txt
 ```bash
 code .
 ```
+
+## Launching Project
+
+* To launch the project frontend, run the following command:
+
+```bash
+streamlit run frontend.py
+```
