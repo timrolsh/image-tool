@@ -4,3 +4,4 @@ streamlit
 opencv-python
 pandas-stubs
 types-Pillow
+pillow-avif-plugin
