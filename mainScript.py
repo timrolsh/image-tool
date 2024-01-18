@@ -3,17 +3,14 @@
 #!pip install pillow-avif-plugin
 #!pip install opencv-python
 
+from PIL import Image
+import os
+import re
+import cv2
+import numpy as np
+import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")
-
-import pillow_avif
-import pandas as pd
-import numpy as np
-import cv2
-import re
-import os
-
-from PIL import Image
 
 
 def CreateExcel():
