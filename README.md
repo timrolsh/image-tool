@@ -38,5 +38,5 @@ code .
 * To launch the project frontend, run the following command:
 
 ```bash
-streamlit run frontend.py
+streamlit run front_end.py
 ```
