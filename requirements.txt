@@ -2,5 +2,6 @@ pandas
 numpy
 streamlit
 opencv-python
+opencv-contrib-python
 pandas-stubs
 types-Pillow
