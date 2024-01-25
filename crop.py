@@ -1,6 +1,7 @@
-import  cv2, sys
-from  matplotlib  import  pyplot as plt
-import  numpy as np
+import cv2, sys
+from matplotlib import pyplot as plt
+import numpy as np
+
 
 # ---- Guassian Blur ---- #
 image =  cv2.imread(r'cosmetic.jpg' )
@@ -25,7 +26,7 @@ contours,_ =  cv2.findContours(closed.copy(),cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX
 total =  0
 contour_image =  cv2.drawContours(image, contours, - 1 , ( 0 , 255 , 0 ),  3 )
 cv2.imshow( 'contours_image' , contour_image)
-
+0
 # ---- Find coordinates of closest 4 corners (square) around the outline of the image ---- #
 contours_xy =  np.array(contours)
 contours_xy.shape
@@ -37,9 +38,7 @@ for  i  in  range ( len (contours_xy)):
         value.append(contours_xy[i][j][ 0 ][ 0 ])  #Value of x when fourth parenthesis is 0
         x_min =  min(value)
         x_max =  max(value)
-print (x_min)
-print (x_max)
- 
+
 # Find min and max of y
 y_min, y_max =  0 , 0
 value =  list()
@@ -48,8 +47,6 @@ for  i  in  range ( len (contours_xy)):
         value.append(contours_xy[i][j][ 0 ][ 1 ])  #Value of x when fourth parenthesis is 0
         y_min =  min(value)
         y_max =  max(value)
-print (y_min)
-print (y_max)
 
 x =  x_min
 y =  y_min
@@ -57,9 +54,9 @@ w =  x_max-x_min
 h =  y_max-y_min
 
 img_trim =  image[y:y+ h,x:x+ w]
-cv2.imwrite( ' org_trim.jpg' , img_trim)
-org_image =  cv2.imread( ' org_trim.jpg' )
-cv2.imshow( 'org_image', org_image)
+cv2.imwrite('org_trim.jpg', img_trim)
+org_image = cv2.imread( 'org_trim.jpg' )
+cv2.imshow('org_image', org_image)
 
 cv2.waitKey( 0 )
 cv2.destroyAllWindows()
