@@ -1,16 +1,28 @@
-from rembg import remove
-from PIL import Image
-import cv2, sys
-from matplotlib import pyplot as plt
-import numpy as np
+import cv2
 
-# Store path of the image in the variable input_path
-input = Image.open("cosmetic.jpg")
+image = cv2.imread("input/3077207647.jpeg")
+edged = cv2.Canny(image, 175, 200)
 
-# Removing the background from the given Image
-output = remove(input)
+contours, hierarchy = cv2.findContours(
+    edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+)
+cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
 
-# Show image
-cv2.imshow("trial", output)
+cv2.imshow("Show contour", image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+for i, c in enumerate(contours):
+    rect = cv2.boundingRect(c)
+    x, y, w, h = rect
+    box = cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    cropped = image[y : y + h, x : x + w]
+    cv2.imshow("Show Boxes", cropped)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    cv2.imwrite("blobby" + str(i) + ".png", cropped)
+
+
+cv2.imshow("Show Boxes", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

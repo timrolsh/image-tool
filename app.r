@@ -50,14 +50,17 @@ server <- function(input, output) {
     return(isolate("File submitted; Ready for download"))
   })
 
-  # Download Button  
+  # Download Button  rather than running the script as an output file, 
+  # have the script run as a button push after dropping in the images
+  # and then have the python open a window that allows you to download
   output$dl <- downloadHandler(
     filename = function() { "cropped.png" }, # default name
     content = function(file) {
       showModal(modalDialog("Downloading", footer = NULL)) # shows the "Downloading" menu
       on.exit(removeModal())
       # the file being made to download
-      source_python("crop.py")
+      img <- source_python("crop.py")
+      
     }
   )
 }
