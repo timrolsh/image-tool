@@ -4,8 +4,8 @@ import numpy as np
 
 
 # ---- Guassian Blur ---- #
-image = cv2.imread(r"input/3077207647.jpeg")
-image_gray = cv2.imread(r"input/3077207647.jpeg", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread(r"cosmetic.jpg")  # input/3077207647.jpeg
+image_gray = cv2.imread(r"cosmetic.jpg", cv2.IMREAD_GRAYSCALE)
 b, g, r = cv2.split(image)
 image2 = cv2.merge([r, g, b])
 blur = cv2.GaussianBlur(
@@ -20,7 +20,7 @@ kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
 closed = cv2.morphologyEx(
     edged, cv2.MORPH_CLOSE, kernel
 )  # close off any "holes" in the outline
-# cv2.imshow( 'closed' , closed)
+cv2.imshow("closed", closed)
 
 # Show original for reference
 cv2.imshow("image", image)
@@ -117,7 +117,7 @@ def bgremove3(myimage):
 # ---- Contour the outline on based off the original image ---- #
 contours, _ = cv2.findContours(
     closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-)
+)  # save the outside and maybe cover everything inside to save and then just fully remove
 total = 0
 contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
 # cv2.imshow( 'contours_image' , contour_image)
@@ -133,8 +133,8 @@ for i in range(len(contours_xy)):
         value.append(contours_xy[i][j][0][0])  # Value of x when fourth parenthesis is 0
         x_min = min(value)
         x_max = max(value)
-print(x_min)
-print(x_max)
+# print(x_min)
+# print(x_max)
 
 # Find min and max of y
 y_min, y_max = 0, 0
@@ -144,8 +144,8 @@ for i in range(len(contours_xy)):
         value.append(contours_xy[i][j][0][1])  # Value of x when fourth parenthesis is 0
         y_min = min(value)
         y_max = max(value)
-print(y_min)
-print(y_max)
+# print(y_min)
+# print(y_max)
 
 x = x_min
 y = y_min
