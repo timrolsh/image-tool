@@ -1,11 +1,12 @@
 import cv2, sys
 from matplotlib import pyplot as plt
 import numpy as np
+from PIL import Image
 
 
 # ---- Guassian Blur ---- #
-image = cv2.imread(r"cosmetic.jpg")  # input/3077207647.jpeg
-image_gray = cv2.imread(r"cosmetic.jpg", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread(r"input/3077207647.jpeg")  # input/3077207647.jpeg
+image_gray = cv2.imread(r"input/3077207647.jpeg", cv2.IMREAD_GRAYSCALE)
 b, g, r = cv2.split(image)
 image2 = cv2.merge([r, g, b])
 blur = cv2.GaussianBlur(
@@ -20,10 +21,10 @@ kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
 closed = cv2.morphologyEx(
     edged, cv2.MORPH_CLOSE, kernel
 )  # close off any "holes" in the outline
-cv2.imshow("closed", closed)
+# cv2.imshow("closed", closed)
 
 # Show original for reference
-cv2.imshow("image", image)
+# cv2.imshow("image", image)
 
 
 def bgremove1(myimage):
@@ -153,10 +154,27 @@ w = x_max - x_min
 h = y_max - y_min
 
 img_trim = image[y : y + h, x : x + w]
-cv2.imwrite("org_trim.jpg", img_trim)
 org_image = cv2.imread("org_trim.jpg")
-cv2.imshow("org_image", org_image)
-x_image = bgremove1(image)
-cv2.imshow("test", x_image)
+# cv2.imshow("org_image", org_image)
+x_image = cv2.drawContours(image, contours, 0, (0, 255, 0), cv2.FILLED)
+cv2.imshow("test.jpg", x_image)
+
+img = Image.open("test.jpg")
+img = img.convert("RGBA")
+
+datas = img.getdata()
+
+newData = []
+
+for item in datas:
+    if item[0] == 0 and item[1] == 255 and item[2] == 0:
+        newData.append(item)
+    else:
+        newData.append((255, 255, 255, 0))
+
+img.putdata(newData)
+img.save("./New.png", "PNG")
+
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
