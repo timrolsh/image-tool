@@ -14,114 +14,21 @@ blur = cv2.GaussianBlur(
 )  # the ksize value dictates the strength of the blur.
 ret, thresh1 = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY)
 edged = cv2.Canny(blur, 10, 250)
-# cv2.imshow( 'Edged' , edged)
+
 
 # ---- Close off the outline ---- #
 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
 closed = cv2.morphologyEx(
     edged, cv2.MORPH_CLOSE, kernel
 )  # close off any "holes" in the outline
-# cv2.imshow("closed", closed)
-
-# Show original for reference
-# cv2.imshow("image", image)
-
-
-def bgremove1(myimage):
-    # Blur to image to reduce noise
-    myimage = cv2.GaussianBlur(myimage, (5, 5), 0)
-
-    # We bin the pixels. Result will be a value 1..5
-    bins = np.array([0, 51, 102, 153, 204, 255])
-    myimage[:, :, :] = np.digitize(myimage[:, :, :], bins, right=True) * 51
-
-    # Create single channel greyscale for thresholding
-    myimage_grey = cv2.cvtColor(myimage, cv2.COLOR_BGR2GRAY)
-
-    # Perform Otsu thresholding and extract the background.
-    # We use Binary Threshold as we want to create an all white background
-    ret, background = cv2.threshold(
-        myimage_grey, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )
-
-    # Convert black and white back into 3 channel greyscale
-    background = cv2.cvtColor(background, cv2.COLOR_GRAY2BGR)
-
-    # Perform Otsu thresholding and extract the foreground.
-    # We use TOZERO_INV as we want to keep some details of the foregorund
-    ret, foreground = cv2.threshold(
-        myimage_grey, 0, 255, cv2.THRESH_TOZERO_INV + cv2.THRESH_OTSU
-    )  # Currently foreground is only a mask
-    foreground = cv2.bitwise_and(
-        myimage, myimage, mask=foreground
-    )  # Update foreground with bitwise_and to extract real foreground
-
-    # Combine the background and foreground to obtain our final image
-    finalimage = background + foreground
-
-    return finalimage
-
-
-def bgremove2(myimage):
-    # First Convert to Grayscale
-    myimage_grey = cv2.cvtColor(myimage, cv2.COLOR_BGR2GRAY)
-
-    ret, baseline = cv2.threshold(myimage_grey, 127, 255, cv2.THRESH_TRUNC)
-
-    ret, background = cv2.threshold(baseline, 126, 255, cv2.THRESH_BINARY)
-
-    ret, foreground = cv2.threshold(baseline, 126, 255, cv2.THRESH_BINARY_INV)
-
-    foreground = cv2.bitwise_and(
-        myimage, myimage, mask=foreground
-    )  # Update foreground with bitwise_and to extract real foreground
-
-    # Convert black and white back into 3 channel greyscale
-    background = cv2.cvtColor(background, cv2.COLOR_GRAY2BGR)
-
-    # Combine the background and foreground to obtain our final image
-    finalimage = background + foreground
-    return finalimage
-
-
-def bgremove3(myimage):
-    # BG Remover 3
-    myimage_hsv = cv2.cvtColor(myimage, cv2.COLOR_BGR2HSV)
-
-    # Take S and remove any value that is less than half
-    s = myimage_hsv[:, :, 1]
-    s = np.where(s < 127, 0, 1)  # Any value below 127 will be excluded
-
-    # We increase the brightness of the image and then mod by 255
-    v = (myimage_hsv[:, :, 2] + 127) % 255
-    v = np.where(v > 127, 1, 0)  # Any value above 127 will be part of our mask
-
-    # Combine our two masks based on S and V into a single "Foreground"
-    foreground = np.where(s + v > 0, 1, 0).astype(
-        np.uint8
-    )  # Casting back into 8bit integer
-
-    background = np.where(foreground == 0, 255, 0).astype(
-        np.uint8
-    )  # Invert foreground to get background in uint8
-    background = cv2.cvtColor(
-        background, cv2.COLOR_GRAY2BGR
-    )  # Convert background back into BGR space
-    foreground = cv2.bitwise_and(
-        myimage, myimage, mask=foreground
-    )  # Apply our foreground map to original image
-    finalimage = background + foreground  # Combine foreground and background
-
-    return finalimage
-
 
 # ---- Contour the outline on based off the original image ---- #
 contours, _ = cv2.findContours(
     closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-)  # save the outside and maybe cover everything inside to save and then just fully remove
+)
 total = 0
 contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
-# cv2.imshow( 'contours_image' , contour_image)
+
 
 # ---- Find coordinates of closest 4 corners (square) around the outline of the image ---- #
 contours_xy = np.array(contours)
@@ -154,27 +61,7 @@ w = x_max - x_min
 h = y_max - y_min
 
 img_trim = image[y : y + h, x : x + w]
-org_image = cv2.imread("org_trim.jpg")
-# cv2.imshow("org_image", org_image)
-x_image = cv2.drawContours(image, contours, 0, (0, 255, 0), cv2.FILLED)
-cv2.imshow("test.jpg", x_image)
-
-img = Image.open("test.jpg")
-img = img.convert("RGBA")
-
-datas = img.getdata()
-
-newData = []
-
-for item in datas:
-    if item[0] == 0 and item[1] == 255 and item[2] == 0:
-        newData.append(item)
-    else:
-        newData.append((255, 255, 255, 0))
-
-img.putdata(newData)
-img.save("./New.png", "PNG")
-
-
+# cropped = cv2.imwrite("cropped.jpg", img_trim)
+# cv2.imshow("cropped", cropped)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
