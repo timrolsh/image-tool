@@ -1,4 +1,4 @@
-import cv2
+import cv2, os
 from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image
@@ -31,29 +31,32 @@ contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), cv2.FILLED)
 # cv2.imshow( 'contours_image' , contour_image)
 cv2.imwrite("contoured.jpg", contour_image)
 
+# ------------- Remove white space and make transparent, and convert file type -----------------------
 img = Image.open("contoured.jpg")
-org_img = Image.open("input/3077207647.jpeg")
+org_img = Image.open("input/3077207647.jpeg") # this opens the highlighted image, and the original as a PIL image
+
 img = img.convert("RGBA")
-org_img = org_img.convert("RGBA")
+org_img = org_img.convert("RGBA") # add the alpha color channel (transparency)
 datas = img.getdata()
-org_datas = org_img.getdata()
+org_datas = org_img.getdata() 
+# save every pixel in the images as an array of RGBA values into an array for both original and contoured
+# keep original to have the non green version
 
 newData = []
-coords = []
 
 for index, item in enumerate(datas):
     if (
-        item[0] in range(0, 20)
-        and item[1] in range(220, 256)
+            item[0] in range(0, 20) # give a little leniency for more accuracy
+        and item[1] in range(220, 256) # green
         and item[2] in range(0, 20)
     ):
-        newData.append(org_datas[index])
+        newData.append(org_datas[index]) # if it's green save the original color from the original image
     else:
-        newData.append((255, 255, 255, 0))
+        newData.append((255, 255, 255, 0)) # transparent pixel
 
 
 img.putdata(newData)
 img.save("output/New.png", "PNG")
-
+os.remove("contoured.jpg") # get rid of halfway image
 cv2.waitKey(0)
 cv2.destroyAllWindows()
