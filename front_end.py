@@ -29,6 +29,7 @@ with left_column:
 setting = right_column.button("Setting")
 run = right_column.button("Run")
 
+
 if setting:
     right_column.write(ms.Setting())
 
