@@ -17,12 +17,8 @@ def CreateExcel():
     writer = pd.ExcelWriter("Input_setting.xlsx", engine="xlsxwriter")
 
     # 1. Setting Sheet
-    input_setting = pd.DataFrame(index=["1.Convert to PNG ONLY", "2.Background Removal (WIP)", "3.Crop to Content (WIP)", "4.Resize (Works)", "5.Rename (Works)"],
-                                 columns=["Check"])
-    input_setting.to_excel(writer, sheet_name="setting")
-
     workbook = writer.book
-    worksheet = writer.sheets["setting"]
+    
 
     cell_format = workbook.add_format()
     cell_format.set_bg_color("yellow")
@@ -34,34 +30,6 @@ def CreateExcel():
     cell_format3 = workbook.add_format()
     cell_format3.set_bold()
     cell_format3.set_align('center')
-
-    worksheet.data_validation('B2', {'validate': 'list', 'source': ["Y", " "]})
-    worksheet.write('B2', '', cell_format)
-
-    worksheet.data_validation('B3', {'validate': 'list', 'source': ["Y", " "]})
-    worksheet.write('B3', '', cell_format)
-    worksheet.write('C3', "2.1. Sensitivity(bg_threshold)", cell_format3)
-    worksheet.data_validation(
-        'D3', {'validate': 'integer', 'criteria': 'between', 'minimum': "1", 'maximum': '255'})
-    worksheet.write('D3', 250, cell_format)
-
-    worksheet.data_validation('B4', {'validate': 'list', 'source': ["Y", " "]})
-    worksheet.write('B4', '', cell_format)
-    worksheet.write('C4', "3.1. Sensitivity(k_size)", cell_format3)
-    worksheet.data_validation(
-        'D4', {'validate': 'integer', 'criteria': 'between', 'minimum': "1", 'maximum': '20'})
-    worksheet.write('D4', 5, cell_format)
-
-    worksheet.data_validation('B5', {'validate': 'list', 'source': ["Y", " "]})
-    worksheet.write('B5', '', cell_format)
-
-    worksheet.data_validation('B6', {'validate': 'list', 'source': ["Y", " "]})
-    worksheet.write('B6', '', cell_format)
-
-    worksheet.set_column(0, 0, 30)
-    worksheet.set_column(1, 1, 10)
-    worksheet.set_column(2, 2, 30)
-    worksheet.set_column(3, 3, 10)
 
     # 2. Image List Sheet
     dir_list = os.listdir("input")
