@@ -1,8 +1,5 @@
 import cv2, os
-from matplotlib import pyplot as plt
-import numpy as np
 from PIL import Image
-import pillow_avif
 
 
 INPUT = "input/3077207647.jpeg"
