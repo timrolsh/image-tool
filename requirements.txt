@@ -7,3 +7,4 @@ pandas-stubs
 types-Pillow
 pillow-avif-plugin
 xlsxwriter
+matplotlib

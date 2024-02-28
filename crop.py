@@ -1,7 +1,5 @@
-import cv2, sys
-from matplotlib import pyplot as plt
+import cv2
 import numpy as np
-from PIL import Image
 
 
 def crop_image(INPUT, kSize):
