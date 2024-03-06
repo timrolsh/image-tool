@@ -13,6 +13,9 @@ from PIL import Image
 
 
 def rembg(INPUT, kSize):
+    IMG = Image.open("INPUT")
+    IMG.save("image.png")
+    INPUT = "image.png"
     # ---- Guassian Blur ---- #
     image = cv2.imread(INPUT)  # input/3077207647.jpeg
     image_gray = cv2.imread(INPUT, cv2.IMREAD_GRAYSCALE)
@@ -23,6 +26,7 @@ def rembg(INPUT, kSize):
     )  # the ksize value dictates the strength of the blur.
     ret, thresh1 = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY)
     edged = cv2.Canny(blur, 5, 255)
+    
 
     # ---- Close off the outline ---- #
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))

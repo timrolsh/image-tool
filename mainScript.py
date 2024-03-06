@@ -34,14 +34,15 @@ def Setting():
 def Run(rembg, crop, resize, rename, kSize):
     im_names = os.listdir("input")
 
-    for name in im_names:
-        if rembg:
-            REMBG.rembg(name, kSize)  # current kSize is a good sweet spot (7) MUST BE ODD
+    if rembg:
+        counter = 1
+        for name in im_names:
+            img = REMBG.rembg("input/" + name, kSize)  # current kSize is a good sweet spot (7) MUST BE ODD
+            img.save(f'output/{counter}.png')
+            counter+=1
+            if crop:
+                CROP.crop_image("input/" + name, kSize)
 
-        if crop:
-            CROP.crop_image(name, kSize)
-            
-            
     df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
 
     for i in df.index:
@@ -65,8 +66,8 @@ def Run(rembg, crop, resize, rename, kSize):
     return "Complete!"
 
 
-run = input()
-if run.lower() == "setting":
-    Setting()
-elif run.lower() == "run":
-    Run(True, True, False, False, 7)
+# run = input()
+# if run.lower() == "setting":
+#     Setting()
+# elif run.lower() == "run":
+#     Run(True, True, False, False, 7)

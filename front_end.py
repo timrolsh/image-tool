@@ -49,7 +49,6 @@ def mainPage():
             st.session_state.runpage()
             st.experimental_rerun()
 
-
 def imagePage():
     st.set_page_config(page_title="Image Tool")
     go_back = st.button("# <-- Go Back")
@@ -64,6 +63,5 @@ def imagePage():
 
     st.write("# Here's what a few of the images look like:")
     st.image("output/New.png")
-
 
 mainPage()
