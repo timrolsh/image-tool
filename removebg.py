@@ -13,7 +13,7 @@ from PIL import Image
 
 
 def rembg(INPUT, kSize):
-    IMG = Image.open("INPUT")
+    IMG = Image.open(INPUT)
     IMG.save("image.png")
     INPUT = "image.png"
     # ---- Guassian Blur ---- #
