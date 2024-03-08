@@ -12,7 +12,15 @@ from PIL import Image
 # INPUT = "image.png"
 
 
-def rembg(INPUT, kSize):
+def rembg(INPUT, kSizeValue: int):
+    # Ensure kSizeValue is odd, and create a tuple (kSizeValue, kSizeValue)
+    if kSizeValue % 2 == 1:  # Check if kSizeValue is odd
+        kSize: tuple[int, int] = (kSizeValue, kSizeValue)
+    else:
+        # If kSizeValue is not odd, adjust it by adding 1
+        kSize = (kSizeValue + 1, kSizeValue + 1)
+    print(kSize)
+    print(type(kSize))
     IMG = Image.open(INPUT)
     IMG.save("image.png")
     INPUT = "image.png"
