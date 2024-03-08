@@ -2,12 +2,7 @@ import cv2
 import numpy as np
 
 
-def crop_image(INPUT, kSizeValue: int):
-    if kSizeValue % 2 == 1:  # Check if kSizeValue is odd
-        kSize: tuple[int, int] = (kSizeValue, kSizeValue)
-    else:
-        # If kSizeValue is not odd, adjust it by adding 1
-        kSize = (kSizeValue + 1, kSizeValue + 1)
+def crop_image(INPUT, kSize: int):
     # ---- Guassian Blur ---- #
     image = cv2.imread(INPUT)  # input/3077207647.jpeg
     image_gray = cv2.imread(INPUT, cv2.IMREAD_GRAYSCALE)

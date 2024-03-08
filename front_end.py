@@ -42,7 +42,7 @@ def mainPage():
     run = right_column.button("Run")
 
     if run:
-        right_column.write(ms.Run(rembg, crop_im, resize, rename, kSize))
+        right_column.write(ms.Run(rembg, crop_im, resize, rename, (kSize, kSize)))
         show_im = st.button("See images here")
         if show_im:
             st.session_state.runpage = imagePage
