@@ -1,70 +1,71 @@
-import cv2, os
-from PIL import Image
-
-
-x = 7
-kSize = (x, x)
-y = 7
-guassian_strength = (y, y)
-IMG = Image.open("input/3077207647.jpeg")
-IMG.save("image.png")
-INPUT = "image.png"
-
+import cv2
+from matplotlib import pyplot as plt
+import numpy as np
 
 # ---- Guassian Blur ---- #
-image = cv2.imread(INPUT)  # input/3077207647.jpeg
-image_gray = cv2.imread(INPUT, cv2.IMREAD_GRAYSCALE)
+image = cv2.imread(r"input/3077207647.jpeg")
+image_gray = cv2.imread(r"input/3077207647.jpeg", cv2.IMREAD_GRAYSCALE)
 b, g, r = cv2.split(image)
 image2 = cv2.merge([r, g, b])
 blur = cv2.GaussianBlur(
-    image_gray, ksize=kSize, sigmaX=0
+    image_gray, ksize=(5, 5), sigmaX=0
 )  # the ksize value dictates the strength of the blur.
 ret, thresh1 = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY)
-edged = cv2.Canny(blur, 5, 255)
+edged = cv2.Canny(blur, 10, 250)
+# cv2.imshow( 'Edged' , edged)
 
 # ---- Close off the outline ---- #
 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
-closed = cv2.morphologyEx(edged, cv2.MORPH_CLOSE, kernel)
-cv2.imshow("blur", closed)
+closed = cv2.morphologyEx(
+    edged, cv2.MORPH_CLOSE, kernel
+)  # close off any "holes" in the outline
+# cv2.imshow( 'closed' , closed)
 
-# ---- Contour the outline and fill in based off the original image ---- #
+# Show original for reference
+cv2.imshow("image", image)
+
+# ---- Contour the outline on based off the original image ---- #
 contours, _ = cv2.findContours(
     closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
 )
 total = 0
-contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), cv2.FILLED)
-cv2.imwrite("contoured.jpg", contour_image)
-cv2.imshow("Contoured", contour_image)
-# ------------- Remove white space and make transparent, and convert file type -----------------------
-img = Image.open("contoured.jpg")
-org_img = Image.open(
-    INPUT
-)  # this opens the highlighted image, and the original as a PIL image
+contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
+cv2.imshow("contours_image", contour_image)
 
-img = img.convert("RGBA")
-org_img = org_img.convert("RGBA")  # add the alpha color channel (transparency)
-datas = img.getdata()
-org_datas = org_img.getdata()
-# save every pixel in the images as an array of RGBA values into an array for both original and contoured
-# keep original to have the non green version
+# ---- Find coordinates of closest 4 corners (square) around the outline of the image ---- #
+contours_xy = np.array(contours)
+contours_xy.shape
 
-newData = []
+x_min, x_max = 0, 0
+value = list()
+for i in range(len(contours_xy)):
+    for j in range(len(contours_xy[i])):
+        value.append(contours_xy[i][j][0][0])  # Value of x when fourth parenthesis is 0
+        x_min = min(value)
+        x_max = max(value)
+print(x_min)
+print(x_max)
 
-for index, item in enumerate(datas):
-    if (
-        item[0] in range(0, 20)  # give a little leniency for more accuracy
-        and item[1] in range(220, 256)  # green
-        and item[2] in range(0, 20)
-    ):
-        newData.append(
-            org_datas[index]
-        )  # if it's green save the original color from the original image
-    else:
-        newData.append((255, 255, 255, 0))  # transparent pixel
+# Find min and max of y
+y_min, y_max = 0, 0
+value = list()
+for i in range(len(contours_xy)):
+    for j in range(len(contours_xy[i])):
+        value.append(contours_xy[i][j][0][1])  # Value of x when fourth parenthesis is 0
+        y_min = min(value)
+        y_max = max(value)
+print(y_min)
+print(y_max)
 
-img.putdata(newData)
-img.save("output/New.png")
-# os.remove("contoured.jpg")
-# os.remove("image.png")  # get rid of halfway images
+x = x_min
+y = y_min
+w = x_max - x_min
+h = y_max - y_min
+
+img_trim = image[y : y + h, x : x + w]
+cv2.imwrite("org_trim.jpg", img_trim)
+org_image = cv2.imread("org_trim.jpg")
+cv2.imshow("org_image", org_image)
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()

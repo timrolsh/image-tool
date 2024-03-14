@@ -33,15 +33,20 @@ def Setting():
 
 def Run(rembg, crop, resize, rename, kSize):
     im_names = os.listdir("input")
+    jobs = [False,False,False,False]
+    
 
     if rembg:
         counter = 1
         for name in im_names:
-            img = REMBG.rembg("input/" + name, kSize)  # current kSize is a good sweet spot (7) MUST BE ODD
-            img.save(f'output/{counter}.png')
-            counter+=1
+            img = REMBG.rembg("input/" + name, kSize)  # current kSize is a good spot (7) MUST BE ODD
             if crop:
-                CROP.crop_image("input/" + name, kSize)
+                img = CROP.crop_image("input/" + name, kSize)
+                cv2.imwrite(f'output/{counter}.png', img)
+                counter += 1
+            else:
+                img.save(f"output/{counter}.png")
+                counter += 1
 
     df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
 
