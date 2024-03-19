@@ -33,8 +33,53 @@ def Setting():
 
 def Run(rembg, crop, resize, rename, kSize):
     im_names = os.listdir("input")
-    jobs = [False,False,False,False]
+    jobs = [rembg,crop,resize,rename]
+    for name in im_names:
+        if jobs[1] and jobs[0]:
+            img = CROP.crop_image("input/" + name, kSize)
+            cv2.imwrite("curr_image.png", img)
+            img = REMBG.rembg("curr_image.png", kSize)
+            cv2.imwrite("curr_image.png", img)
+        elif jobs[0]:
+            img = REMBG.rembg("curr_image.png", kSize)
+            cv2.imwrite("curr_image.png", img)
+        elif jobs[1]:
+            img = CROP.crop_image("input/" + name, kSize)
+            cv2.imwrite("curr_image.png", img)
     
+        if (jobs[2] or jobs[3]) and (jobs[0] or jobs[1]):
+            df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
+            for i in df.index:
+                pattern = r"([A-Za-z0-9_-]+)."
+                name_before = re.findall(pattern, df.loc[i]["Current Name"])[0]
+                name_after = str(df.loc[i]["New Name"])
+                target_h = df.loc[i]["Target Height"]
+
+                # Resizing
+                if jobs[2]:
+                    width, height = img.size
+                    new_width = int(width * target_h / height)
+                    img = img.resize((new_width, target_h))
+
+                if jobs[3]:
+                    img.save("output/" + name_after + ".png", format="png")
+        elif (jobs[2] or jobs[3]) and not (jobs[0] or jobs[1]):
+            
+            df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
+            for i in df.index:
+                pattern = r"([A-Za-z0-9_-]+)."
+                name_before = re.findall(pattern, df.loc[i]["Current Name"])[0]
+                name_after = str(df.loc[i]["New Name"])
+                target_h = df.loc[i]["Target Height"]
+
+                # Resizing
+                if jobs[2]:
+                    width, height = img.size
+                    new_width = int(width * target_h / height)
+                    img = img.resize((new_width, target_h))
+
+                if jobs[3]:
+                    img.save("output/" + name_after + ".png", format="png")
 
     if rembg:
         counter = 1
