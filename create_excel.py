@@ -57,3 +57,4 @@ def create_excel():
 
     writer.close()
     workbook.close()
+    return "Complete!"

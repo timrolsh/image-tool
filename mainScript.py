@@ -36,18 +36,18 @@ def Run(rembg, crop, resize, rename, kSize):
     jobs = [rembg,crop,resize,rename]
     for name in im_names:
         if jobs[1] and jobs[0]:
-            img = CROP.crop_image("input/" + name, kSize)
+            img = CROP.crop_image(("input/"+name), kSize)
             cv2.imwrite("curr_image.png", img)
             img = REMBG.rembg("curr_image.png", kSize)
-            cv2.imwrite("curr_image.png", img)
+            img.save("curr_image.png")
         elif jobs[0]:
-            img = REMBG.rembg("curr_image.png", kSize)
-            cv2.imwrite("curr_image.png", img)
+            img = REMBG.rembg("input/" + name, kSize)
+            img.save("curr_image.png")
         elif jobs[1]:
             img = CROP.crop_image("input/" + name, kSize)
             cv2.imwrite("curr_image.png", img)
         if jobs[2] or jobs[3]:
-            img = cv2.imread("curr_image.png")
+            img = Image.open("curr_image.png")
             df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
             for i in df.index:
                 pattern = r"([A-Za-z0-9_-]+)."
@@ -63,7 +63,9 @@ def Run(rembg, crop, resize, rename, kSize):
 
                 if jobs[3]:
                     img.save("output/" + name_after + ".png", format="png")
-
+        if not jobs[3]:
+            img.save("output/"+name_before+".png", format="png")
+        os.remove("curr_image.png")
     return "Complete!"
 
 

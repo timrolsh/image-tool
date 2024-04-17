@@ -32,7 +32,7 @@ def crop_image(INPUT, kSize: int):
     )
     total = 0
     contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
-    #cv2.imshow("contours_image", contour_image)
+    cv2.imshow("contours_image", contour_image)
 
     # ---- Find coordinates of closest 4 corners (square) around the outline of the image ---- #
     contours_xy = np.array(contours)
