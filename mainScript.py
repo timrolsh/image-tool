@@ -46,8 +46,8 @@ def Run(rembg, crop, resize, rename, kSize):
         elif jobs[1]:
             img = CROP.crop_image("input/" + name, kSize)
             cv2.imwrite("curr_image.png", img)
-    
-        if (jobs[2] or jobs[3]) and (jobs[0] or jobs[1]):
+        if jobs[2] or jobs[3]:
+            img = cv2.imread("curr_image.png")
             df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
             for i in df.index:
                 pattern = r"([A-Za-z0-9_-]+)."
@@ -63,55 +63,6 @@ def Run(rembg, crop, resize, rename, kSize):
 
                 if jobs[3]:
                     img.save("output/" + name_after + ".png", format="png")
-        elif (jobs[2] or jobs[3]) and not (jobs[0] or jobs[1]):
-            
-            df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
-            for i in df.index:
-                pattern = r"([A-Za-z0-9_-]+)."
-                name_before = re.findall(pattern, df.loc[i]["Current Name"])[0]
-                name_after = str(df.loc[i]["New Name"])
-                target_h = df.loc[i]["Target Height"]
-
-                # Resizing
-                if jobs[2]:
-                    width, height = img.size
-                    new_width = int(width * target_h / height)
-                    img = img.resize((new_width, target_h))
-
-                if jobs[3]:
-                    img.save("output/" + name_after + ".png", format="png")
-
-    if rembg:
-        counter = 1
-        for name in im_names:
-            img = REMBG.rembg("input/" + name, kSize)  # current kSize is a good spot (7) MUST BE ODD
-            if crop:
-                img = CROP.crop_image("input/" + name, kSize)
-                cv2.imwrite(f'output/{counter}.png', img)
-                counter += 1
-            else:
-                img.save(f"output/{counter}.png")
-                counter += 1
-
-    df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
-
-    for i in df.index:
-        pattern = r"([A-Za-z0-9_-]+)."
-        name_before = re.findall(pattern, df.loc[i]["Current Name"])[0]
-        name_after = str(df.loc[i]["New Name"])
-        target_h = df.loc[i]["Target Height"]
-
-        # Resizing
-        if resize:
-            width, height = img.size
-            new_width = int(width * target_h / height)
-            img = img.resize((new_width, target_h))
-
-        # Renaming & Converting to PNG
-        if rename:
-            img.save("output/" + name_after + ".png", format="png")
-        else:
-            img.save("output/" + name_before + ".png", format="png")
 
     return "Complete!"
 
