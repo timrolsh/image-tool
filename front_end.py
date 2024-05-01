@@ -3,7 +3,7 @@ import mainScript as ms
 import create_excel as ce
 import os
 
-
+# go to streamlit doc and get config file to make sure you host on localhost
 def mainPage():
 
     st.set_page_config(page_title="Image Tool", layout="wide")
@@ -36,7 +36,7 @@ def mainPage():
 
     with right_column:
         st.info( # make into button options
-            'kSize can be thought of as the "strength" of the background removal, so bigger number, more of the image will be removed...'
+            'This slider can be thought of as the "strength" of the background removal, so bigger number, more of the image will be removed...'
         )
         kSize = st.slider("Removal Strength", 1, 15, 7, 2)
 
