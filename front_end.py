@@ -7,6 +7,7 @@ import os
 def mainPage():
 
     st.set_page_config(page_title="Image Tool", layout="wide")
+    st.set_option("browser.serverAddress", "localhost")
     st.write("# Skim Image Tool!")
     st.write(" --- ")
 
@@ -55,11 +56,11 @@ def mainPage():
         with st.spinner("Please wait... Processing"):
             right_column.write(ms.Run(rembg, crop_im, resize, rename, (kSize, kSize)))
         st.balloons()
-            # show_im = st.button("See images here")
-            # if show_im:
-            #     st.session_state.runpage = imagePage
-            #     st.session_state.runpage()
-            #     st.experimental_rerun()
+        # show_im = st.button("See images here")
+        # if show_im:
+        #     st.session_state.runpage = imagePage
+        #     st.session_state.runpage()
+        #     st.experimental_rerun()
 
 
 def imagePage():
