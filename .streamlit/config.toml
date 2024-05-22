@@ -1,0 +1,13 @@
+[theme]
+primaryColor = "#4BEFFF"
+backgroundColor = "#0E1117"
+textColor = "#FAFAFA"
+secondaryBackgroundColor = "#262730"
+
+
+
+address = "localhost"
+port =  8080
+
+
+

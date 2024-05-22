@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit import config as config
 import mainScript as ms
 import create_excel as ce
 import os
@@ -7,7 +8,6 @@ import os
 def mainPage():
 
     st.set_page_config(page_title="Image Tool", layout="wide")
-    st.set_option("browser.serverAddress", "localhost")
     st.write("# Skim Image Tool!")
     st.write(" --- ")
 
