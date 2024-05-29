@@ -1,0 +1,19 @@
+# Environment definition file for Conda for ease of install
+# To create the environment, run the following command:
+# conda env create -f environment.yml
+name: image-tool
+dependencies:
+    - python=3.12.3
+    - pandas
+    - numpy
+    - streamlit
+    - pandas-stubs
+    - xlsxwriter
+    - matplotlib
+    - pip
+    - pip:
+        - opencv-python
+        - opencv-contrib-python
+        - pillow
+        - types-Pillow
+        - pillow-avif-plugin
