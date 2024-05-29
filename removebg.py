@@ -1,15 +1,6 @@
-import cv2, os
+import cv2
+import os
 from PIL import Image
-
-
-# INPUT = "input/3077207647.jpeg"
-# x = 7
-# kSize = (x, x)
-# y = 7
-# guassian_strength = (y, y)
-# IMG = Image.open("input/tester.png")
-# IMG.save("image.png")
-# INPUT = "image.png"
 
 
 def rembg(INPUT, kSize: int):
@@ -26,7 +17,6 @@ def rembg(INPUT, kSize: int):
     )  # the ksize value dictates the strength of the blur.
     ret, thresh1 = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY)
     edged = cv2.Canny(blur, 5, 255)
-    
 
     # ---- Close off the outline ---- #
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
@@ -37,7 +27,8 @@ def rembg(INPUT, kSize: int):
         closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
     )
     total = 0
-    contour_image = cv2.drawContours(image, contours, -1, (0, 255, 0), cv2.FILLED)
+    contour_image = cv2.drawContours(
+        image, contours, -1, (0, 255, 0), cv2.FILLED)
     cv2.imwrite("contoured.jpg", contour_image)
 
     # ------------- Remove white space and make transparent, and convert file type -----------------------
@@ -47,7 +38,8 @@ def rembg(INPUT, kSize: int):
     )  # this opens the highlighted image, and the original as a PIL image
 
     img = img.convert("RGBA")
-    org_img = org_img.convert("RGBA")  # add the alpha color channel (transparency)
+    # add the alpha color channel (transparency)
+    org_img = org_img.convert("RGBA")
     datas = img.getdata()
     org_datas = org_img.getdata()
     # save every pixel in the images as an array of RGBA values into an array for both original and contoured

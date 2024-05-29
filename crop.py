@@ -71,7 +71,7 @@ def crop_image(INPUT, kSize: int):
     w = x_max - x_min
     h = y_max - y_min
 
-    img_trim = image[y : y + h, x : x + w]
+    img_trim = image[y: y + h, x: x + w]
     cv2.imwrite("org_trim.jpg", img_trim)
     org_image = cv2.imread("org_trim.jpg")
 

@@ -33,7 +33,7 @@ def Setting():
 
 def Run(rembg, crop, resize, rename, kSize):
     im_names = os.listdir("input")
-    jobs = [rembg,crop,resize,rename]
+    jobs = [rembg, crop, resize, rename]
     i = 0
     for name in im_names:
         if jobs[1] and jobs[0]:
@@ -51,7 +51,7 @@ def Run(rembg, crop, resize, rename, kSize):
             img = Image.open("curr_image.png")
             df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
             print(df)
-            
+
             pattern = r"([A-Za-z0-9_-]+)."
             name_before = re.findall(pattern, df.loc[i]["Current Name"])[0]
             name_after = str(df.loc[i]["New Name"])
@@ -69,7 +69,7 @@ def Run(rembg, crop, resize, rename, kSize):
             img = Image.open("curr_image.png")
             img.save("output/"+name, format="png")
         os.remove("curr_image.png")
-        i+=1
+        i += 1
     return "Complete!"
 
 
