@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from PIL import Image
-from pil_to_cv import pil_to_cv
+from pil_to_cv import pil_to_cv, cv_to_pil
 
 
 def crop_image(INPUT: Image, kSize: tuple[int, int]):
@@ -55,4 +55,4 @@ def crop_image(INPUT: Image, kSize: tuple[int, int]):
 
     img_trim = image[y: y + h, x: x + w]
     # return a pil image file from this variable img_trim
-    return Image.fromarray(cv2.cvtColor(img_trim, cv2.COLOR_BGR2RGB))
+    return cv_to_pil(img_trim)
