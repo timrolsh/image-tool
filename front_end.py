@@ -42,7 +42,7 @@ def mainPage():
         st.info(  # make into button options
             'This slider can be thought of as the "strength" of the background removal, so bigger number, more of the image will be removed...'
         )
-        kSize = st.slider("Removal Strength", 1, 15, 7, 2)
+        kSize: int = st.slider("Removal Strength", 1, 15, 7, 2)
 
     with middle_column:
         if resize or rename:
@@ -60,11 +60,6 @@ def mainPage():
             right_column.write(
                 ms.Run(rembg, crop_im, resize, rename, (kSize, kSize)))
         st.balloons()
-        # show_im = st.button("See images here")
-        # if show_im:
-        #     st.session_state.runpage = imagePage
-        #     st.session_state.runpage()
-        #     st.experimental_rerun()
 
 
 def imagePage():
@@ -76,8 +71,6 @@ def imagePage():
         st.experimental_rerun()
     st.write("# Skim Image Tool!")
     st.write(" --- ")
-
-    output_images = os.listdir("output")
 
     st.write("# Here's what a few of the images look like:")
     st.image("output/New.png")

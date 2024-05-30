@@ -7,13 +7,11 @@ from PIL import Image
 import os
 import re
 import cv2
-import numpy as np
 import pandas as pd
 import warnings
 
 import removebg as REMBG
 import crop as CROP
-import create_excel as ce
 
 warnings.filterwarnings("ignore")
 
@@ -52,8 +50,6 @@ def Run(rembg, crop, resize, rename, kSize):
             df = pd.read_excel("Input_setting.xlsx", sheet_name="Images")
             print(df)
 
-            pattern = r"([A-Za-z0-9_-]+)."
-            name_before = re.findall(pattern, df.loc[i]["Current Name"])[0]
             name_after = str(df.loc[i]["New Name"])
             target_h = df.loc[i]["Target Height"]
 
@@ -71,10 +67,3 @@ def Run(rembg, crop, resize, rename, kSize):
         os.remove("curr_image.png")
         i += 1
     return "Complete!"
-
-
-# run = input()
-# if run.lower() == "setting":
-#     Setting()
-# elif run.lower() == "run":
-#     Run(True, True, False, False, 7)

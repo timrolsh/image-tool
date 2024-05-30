@@ -3,19 +3,16 @@ import os
 from PIL import Image
 
 
-def rembg(INPUT, kSize: int):
+def rembg(INPUT, kSize: tuple[int, int]):
     IMG = Image.open(INPUT)
     IMG.save("image.png")
     INPUT = "image.png"
     # ---- Guassian Blur ---- #
     image = cv2.imread(INPUT)  # input/3077207647.jpeg
     image_gray = cv2.imread(INPUT, cv2.IMREAD_GRAYSCALE)
-    b, g, r = cv2.split(image)
-    image2 = cv2.merge([r, g, b])
     blur = cv2.GaussianBlur(
         image_gray, ksize=kSize, sigmaX=0
     )  # the ksize value dictates the strength of the blur.
-    ret, thresh1 = cv2.threshold(blur, 127, 255, cv2.THRESH_BINARY)
     edged = cv2.Canny(blur, 5, 255)
 
     # ---- Close off the outline ---- #
@@ -26,7 +23,6 @@ def rembg(INPUT, kSize: int):
     contours, _ = cv2.findContours(
         closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
     )
-    total = 0
     contour_image = cv2.drawContours(
         image, contours, -1, (0, 255, 0), cv2.FILLED)
     cv2.imwrite("contoured.jpg", contour_image)
