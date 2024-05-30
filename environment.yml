@@ -11,6 +11,7 @@ dependencies:
     - xlsxwriter
     - matplotlib
     - watchdog
+    - mypy
     - pip
     - pip:
         - opencv-python
