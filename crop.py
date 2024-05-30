@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
-import os
+from PIL import Image
+from pil_to_cv import pil_to_cv
 
 
-def crop_image(INPUT, kSize: tuple[int, int]):
-    image = cv2.imread(INPUT)
-    image_gray = cv2.imread(INPUT, cv2.IMREAD_GRAYSCALE)
+def crop_image(INPUT: Image, kSize: tuple[int, int]):
+    image = pil_to_cv(INPUT)
+    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(
         image_gray, ksize=kSize, sigmaX=0
     )  # the ksize value dictates the strength of the blur.
@@ -53,8 +54,5 @@ def crop_image(INPUT, kSize: tuple[int, int]):
     h = y_max - y_min
 
     img_trim = image[y: y + h, x: x + w]
-    cv2.imwrite("org_trim.jpg", img_trim)
-    org_image = cv2.imread("org_trim.jpg")
-
-    os.remove("org_trim.jpg")
-    return org_image
+    # return a pil image file from this variable img_trim
+    return Image.fromarray(cv2.cvtColor(img_trim, cv2.COLOR_BGR2RGB))
