@@ -10,7 +10,6 @@ dependencies:
     - pandas-stubs
     - xlsxwriter
     - matplotlib
-    - watchdog
     - mypy
     - pip
     - pip:
@@ -19,3 +18,4 @@ dependencies:
         - pillow
         - types-Pillow
         - pillow-avif-plugin
+        - watchdog
