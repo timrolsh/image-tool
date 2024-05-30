@@ -1,62 +1,45 @@
 import cv2
-import os
+import numpy as np
 from PIL import Image
 
 
-def rembg(INPUT, kSize: tuple[int, int]):
-    IMG = Image.open(INPUT)
-    IMG.save("image.png")
-    INPUT = "image.png"
-    # ---- Guassian Blur ---- #
-    image = cv2.imread(INPUT)  # input/3077207647.jpeg
-    image_gray = cv2.imread(INPUT, cv2.IMREAD_GRAYSCALE)
-    blur = cv2.GaussianBlur(
-        image_gray, ksize=kSize, sigmaX=0
-    )  # the ksize value dictates the strength of the blur.
-    edged = cv2.Canny(blur, 5, 255)
+def rembg(input_image_path, kSize: tuple[int, int]):
+    # Load the image using OpenCV directly
+    image = cv2.imread(input_image_path)
+    image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # Adjustable Gaussian blur
+    blur = cv2.GaussianBlur(image_gray, kSize, sigmaX=0)
 
-    # ---- Close off the outline ---- #
+    # Enhanced edge detection using Canny
+    edged = cv2.Canny(blur, 50, 150)
+
+    # Improved morphological closing
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
     closed = cv2.morphologyEx(edged, cv2.MORPH_CLOSE, kernel)
 
-    # ---- Contour the outline and fill in based off the original image ---- #
+    # Fill in the contours on the original image
     contours, _ = cv2.findContours(
-        closed.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
-    )
-    contour_image = cv2.drawContours(
-        image, contours, -1, (0, 255, 0), cv2.FILLED)
-    cv2.imwrite("contoured.jpg", contour_image)
+        closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    mask = np.zeros_like(image)
+    cv2.drawContours(mask, contours, -1, (255, 255, 255), thickness=cv2.FILLED)
 
-    # ------------- Remove white space and make transparent, and convert file type -----------------------
-    img = Image.open("contoured.jpg")
-    org_img = Image.open(
-        INPUT
-    )  # this opens the highlighted image, and the original as a PIL image
+    # Convert mask to boolean and use it to create the final transparent image
+    mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+    # Where mask is white, transparency should be applied
+    pixels_to_change = mask == 255
 
-    img = img.convert("RGBA")
-    # add the alpha color channel (transparency)
-    org_img = org_img.convert("RGBA")
-    datas = img.getdata()
-    org_datas = org_img.getdata()
-    # save every pixel in the images as an array of RGBA values into an array for both original and contoured
-    # keep original to have the non green version
+    # Convert the original OpenCV image to PIL for final output with transparency
+    final_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGBA))
+    datas = final_image.getdata()
 
-    newData = []
-
-    for index, item in enumerate(datas):
-        if (
-            item[0] in range(0, 20)  # give a little leniency for more accuracy
-            and item[1] in range(220, 256)  # green
-            and item[2] in range(0, 20)
-        ):
-            newData.append(
-                org_datas[index]
-            )  # if it's green save the original color from the original image
+    newData: list[tuple[int, int, int, int]] = []
+    for item, change in zip(datas, np.nditer(pixels_to_change)):
+        if change:
+            newData.append((255, 255, 255, 0))  # Making pixel transparent
         else:
-            newData.append((255, 255, 255, 0))  # transparent pixel
+            newData.append(item)  # Retaining original pixel
 
-    img.putdata(newData)
+    final_image.putdata(newData)
+    final_image.save("output.png")  # Save the final image with transparency
 
-    os.remove("contoured.jpg")
-    os.remove("image.png")  # get rid of halfway images
-    return img
+    return final_image
