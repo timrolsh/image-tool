@@ -38,11 +38,11 @@ def mainPage():
             resize = st.checkbox("Resize", value=False)
             rename = st.checkbox("Rename", value=False)
 
-    with right_column:
-        st.info(  # make into button options
-            'This slider can be thought of as the "strength" of the background removal, so bigger number, more of the image will be removed...'
-        )
-        kSize: int = st.slider("Removal Strength", 1, 15, 7, 2)
+    # with right_column:
+    #     st.info(  # make into button options
+    #         'This slider can be thought of as the "strength" of the background removal, so bigger number, more of the image will be removed...'
+    #     )
+    #     kSize: int = st.slider("Removal Strength", 1, 15, 7, 2)
 
     with middle_column:
         if resize or rename:
@@ -55,6 +55,7 @@ def mainPage():
         right_column.write(ms.Setting())
     run = right_column.button("Run")
 
+    kSize: int = 7
     if run:
         with st.spinner("Please wait... Processing"):
             right_column.write(
